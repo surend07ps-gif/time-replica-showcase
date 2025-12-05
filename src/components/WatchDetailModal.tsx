@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
+import AuthPromptDialog from "./AuthPromptDialog";
+import ContactPurchaseDialog from "./ContactPurchaseDialog";
 
 interface WatchDetailModalProps {
   watch: {
@@ -14,6 +17,7 @@ interface WatchDetailModalProps {
   onOpenChange: (open: boolean) => void;
   onToggleWishlist: (watchId: number) => void;
   isInWishlist: boolean;
+  isAuthenticated: boolean;
 }
 
 const WatchDetailModal = ({ 
@@ -21,9 +25,29 @@ const WatchDetailModal = ({
   open, 
   onOpenChange, 
   onToggleWishlist,
-  isInWishlist 
+  isInWishlist,
+  isAuthenticated
 }: WatchDetailModalProps) => {
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+
   if (!watch) return null;
+
+  const handleWishlistClick = () => {
+    if (!isAuthenticated) {
+      setAuthDialogOpen(true);
+      return;
+    }
+    onToggleWishlist(watch.id);
+  };
+
+  const handleContactClick = () => {
+    if (!isAuthenticated) {
+      setAuthDialogOpen(true);
+      return;
+    }
+    setContactDialogOpen(true);
+  };
 
   const specs = [
     { label: "Movement", value: "Automatic" },
@@ -74,7 +98,7 @@ const WatchDetailModal = ({
 
             <div className="space-y-3">
               <Button
-                onClick={() => onToggleWishlist(watch.id)}
+                onClick={handleWishlistClick}
                 variant="outline"
                 className="w-full"
               >
@@ -86,8 +110,23 @@ const WatchDetailModal = ({
                 {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               </Button>
               
-              <Button className="w-full">Contact for Purchase</Button>
+              <Button className="w-full" onClick={handleContactClick}>
+                Contact for Purchase
+              </Button>
             </div>
+
+            <AuthPromptDialog 
+              open={authDialogOpen} 
+              onOpenChange={setAuthDialogOpen}
+              title="Sign In Required"
+              description="Please sign in to add items to your wishlist or contact us for purchase."
+            />
+
+            <ContactPurchaseDialog
+              open={contactDialogOpen}
+              onOpenChange={setContactDialogOpen}
+              watchName={watch.name}
+            />
 
             <div className="text-sm text-muted-foreground">
               <p>
