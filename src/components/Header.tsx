@@ -15,7 +15,7 @@ import {
 const Header = () => {
   const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
-  const { isAdmin } = useAdmin();
+  const { isAdmin, loading: adminLoading } = useAdmin();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -83,11 +83,11 @@ const Header = () => {
             <Heart className="h-4 w-4" />
             WISHLIST
           </Link>
-          {isAdmin && (
+          {!adminLoading && isAdmin && (
             <Link 
               to="/admin"
               onClick={() => mobile && setOpen(false)}
-              className={`text-sm tracking-wider transition-colors flex items-center gap-1 ${
+              className={`text-sm tracking-wider transition-colors flex items-center gap-1 animate-in fade-in duration-300 ${
                 isActive("/admin") ? "text-primary" : "text-foreground hover:text-primary"
               }`}
             >

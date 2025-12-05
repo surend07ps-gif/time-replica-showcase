@@ -110,6 +110,7 @@ const CuratedSelection = () => {
               onQuickView={handleQuickView}
               onToggleWishlist={toggleWishlist}
               isInWishlist={wishlist.includes(watch.id)}
+              isAuthenticated={!!user}
             />
           ))}
         </div>
@@ -121,6 +122,7 @@ const CuratedSelection = () => {
         onOpenChange={setModalOpen}
         onToggleWishlist={toggleWishlist}
         isInWishlist={selectedWatch ? wishlist.includes(selectedWatch.id) : false}
+        isAuthenticated={!!user}
       />
     </section>
   );

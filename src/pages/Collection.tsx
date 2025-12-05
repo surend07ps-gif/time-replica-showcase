@@ -180,6 +180,7 @@ const Collection = () => {
                     onQuickView={handleQuickView}
                     onToggleWishlist={toggleWishlist}
                     isInWishlist={wishlist.includes(watch.id)}
+                    isAuthenticated={!!user}
                   />
                 ))}
               </div>
@@ -196,6 +197,7 @@ const Collection = () => {
         onOpenChange={setModalOpen}
         onToggleWishlist={toggleWishlist}
         isInWishlist={selectedWatch ? wishlist.includes(selectedWatch.id) : false}
+        isAuthenticated={!!user}
       />
     </div>
   );
