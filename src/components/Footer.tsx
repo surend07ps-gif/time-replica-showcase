@@ -27,88 +27,83 @@ const Footer = () => {
 
   return (
     <footer className="border-t border-border bg-background">
-      <div className="container mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          <div>
-            <h3 className="font-display text-2xl mb-4">THE TIME STORE</h3>
-            <p className="text-muted-foreground leading-relaxed">
+      <div className="container mx-auto px-5 md:px-6 py-10 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-10 md:mb-16">
+          <div className="col-span-2 md:col-span-1 text-center md:text-left mb-4 md:mb-0">
+            <h3 className="font-display text-xl md:text-2xl mb-3 md:mb-4">THE TIME STORE</h3>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xs mx-auto md:mx-0">
               Curators of exceptional timepieces for the discerning collector. 
               Defining luxury through precision and elegance since 1985.
             </p>
           </div>
           
-          <div>
-            <h4 className="font-semibold mb-4 tracking-wide">Collection</h4>
-            <ul className="space-y-3">
+          <div className="text-center md:text-left">
+            <h4 className="font-semibold mb-3 md:mb-4 tracking-wide text-sm md:text-base">Collection</h4>
+            <ul className="space-y-2 md:space-y-3">
               <li>
-                <Link to="/collection" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/collection" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                   All Watches
                 </Link>
               </li>
               <li>
-                <Link to="/brands" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/brands" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                   Shop by Brand
                 </Link>
               </li>
               <li>
-                <Link to="/collection" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/collection" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                   New Arrivals
-                </Link>
-              </li>
-              <li>
-                <Link to="/wishlist" className="text-muted-foreground hover:text-primary transition-colors">
-                  My Wishlist
                 </Link>
               </li>
             </ul>
           </div>
           
-          <div>
-            <h4 className="font-semibold mb-4 tracking-wide">Account</h4>
-            <ul className="space-y-3">
+          <div className="text-center md:text-left">
+            <h4 className="font-semibold mb-3 md:mb-4 tracking-wide text-sm md:text-base">Account</h4>
+            <ul className="space-y-2 md:space-y-3">
               <li>
-                <Link to="/auth" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/auth" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                   Sign In
                 </Link>
               </li>
               <li>
-                <Link to="/auth" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/auth" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                   Create Account
                 </Link>
               </li>
               <li>
-                <Link to="/wishlist" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/wishlist" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                   Wishlist
                 </Link>
               </li>
             </ul>
           </div>
           
-          <div>
-            <h4 className="font-semibold mb-4 tracking-wide">Newsletter</h4>
-            <p className="text-muted-foreground mb-4">
-              Subscribe to receive updates on new arrivals and exclusive events.
+          <div className="col-span-2 lg:col-span-1 text-center md:text-left">
+            <h4 className="font-semibold mb-3 md:mb-4 tracking-wide text-sm md:text-base">Newsletter</h4>
+            <p className="text-muted-foreground mb-3 md:mb-4 text-sm">
+              Subscribe for updates on new arrivals.
             </p>
-            <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+            <form onSubmit={handleNewsletterSubmit} className="flex gap-2 max-w-sm mx-auto md:mx-0">
               <Input 
                 type="email" 
                 placeholder="Email Address" 
-                className="bg-secondary border-border"
+                className="bg-secondary border-border text-sm"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8">
+              <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 md:px-8 text-sm">
                 JOIN
               </Button>
             </form>
           </div>
         </div>
         
-        <div className="flex items-center justify-between pt-8 border-t border-border">
-          <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 md:pt-8 border-t border-border">
+          <p className="text-xs md:text-sm text-muted-foreground text-center md:text-left order-2 md:order-1">
             © {new Date().getFullYear()} The Time Store. All rights reserved.
           </p>
-          <div className="flex gap-6">
+          <div className="flex gap-6 order-1 md:order-2">
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
               <Instagram className="h-5 w-5" />
             </a>

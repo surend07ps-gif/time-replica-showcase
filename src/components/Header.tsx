@@ -166,9 +166,9 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-5 md:px-6 py-3 md:py-4">
         <nav className="flex items-center justify-between">
-          <Link to="/" className="font-display text-2xl tracking-tight">
+          <Link to="/" className="font-display text-lg md:text-2xl tracking-tight">
             The Time Store
           </Link>
           
@@ -184,12 +184,12 @@ const Header = () => {
           {/* Mobile Navigation */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
+              <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] pt-12">
-              <nav className="flex flex-col gap-6">
+            <SheetContent side="right" className="w-[260px] pt-14 px-6">
+              <nav className="flex flex-col gap-5">
                 <NavLinks mobile />
                 <hr className="border-border" />
                 <MobileUserLinks />

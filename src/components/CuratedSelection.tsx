@@ -85,24 +85,24 @@ const CuratedSelection = () => {
   };
 
   return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto px-6">
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <h2 className="font-display text-5xl mb-4">Curated Selection</h2>
-            <p className="text-luxury-text-muted">
+    <section className="py-12 md:py-24 bg-background">
+      <div className="container mx-auto px-5 md:px-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-4">
+          <div className="text-center md:text-left">
+            <h2 className="font-display text-3xl md:text-5xl mb-2 md:mb-4">Curated Selection</h2>
+            <p className="text-muted-foreground text-sm md:text-base">
               Handpicked for their exceptional craftsmanship.
             </p>
           </div>
           <Link 
             to="/collection" 
-            className="text-primary hover:text-luxury-gold-hover transition-colors tracking-wide"
+            className="text-primary hover:text-luxury-gold-hover transition-colors tracking-wide text-sm md:text-base text-center md:text-right"
           >
-            View All Collection
+            View All →
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {watches.map((watch) => (
             <WatchCard 
               key={watch.id} 
