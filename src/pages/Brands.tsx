@@ -4,8 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WatchCard from "@/components/WatchCard";
+import WatchCardSkeleton from "@/components/WatchCardSkeleton";
 import WatchDetailModal from "@/components/WatchDetailModal";
 import BackToTopButton from "@/components/BackToTopButton";
+import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
 import { useWishlist } from "@/hooks/useWishlist";
 import watchDiver from "@/assets/watch-diver.jpg";
@@ -40,9 +42,11 @@ interface Watch {
 const Brands = () => {
   const [user, setUser] = useState<User | null>(null);
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedWatch, setSelectedWatch] = useState<Watch | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [watches, setWatches] = useState<Watch[]>(staticWatches);
+  const [loading, setLoading] = useState(true);
   const { wishlist, toggleWishlist } = useWishlist(user);
 
   useEffect(() => {
@@ -59,6 +63,7 @@ const Brands = () => {
 
   useEffect(() => {
     const fetchWatches = async () => {
+      setLoading(true);
       const { data, error } = await supabase
         .from("watches")
         .select("*");
@@ -73,6 +78,7 @@ const Brands = () => {
           image: w.image_url || watchDiver,
         })));
       }
+      setLoading(false);
     };
     fetchWatches();
   }, []);
@@ -85,10 +91,16 @@ const Brands = () => {
     }
   };
 
-  // Filter watches by active brand
-  const filteredWatches = activeBrand
-    ? watches.filter((watch) => watch.brand.toUpperCase() === activeBrand)
-    : watches;
+  // Filter watches by search and brand
+  const filteredWatches = watches.filter((watch) => {
+    const matchesSearch = searchQuery === "" || 
+      watch.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      watch.brand.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesBrand = !activeBrand || watch.brand.toUpperCase() === activeBrand;
+    
+    return matchesSearch && matchesBrand;
+  });
   
   return (
     <div className="min-h-screen bg-background">
@@ -98,17 +110,26 @@ const Brands = () => {
         <section className="py-6 md:py-16 bg-background">
           <div className="container mx-auto px-4 md:px-6">
             {/* Header - Mobile Optimized */}
-            <div className="mb-6 md:mb-12">
+            <div className="mb-4 md:mb-8">
               <h1 className="font-display text-3xl md:text-6xl mb-2 md:mb-4">Prestige Brands</h1>
               <p className="text-muted-foreground text-sm md:text-lg max-w-3xl">
                 Browse from the world's most renowned watchmakers.
               </p>
             </div>
+
+            {/* Search Bar */}
+            <div className="mb-4 md:mb-6">
+              <SearchBar 
+                value={searchQuery} 
+                onChange={setSearchQuery}
+                placeholder="Search by name or brand..."
+              />
+            </div>
             
             {/* Brand Filters - Mobile Optimized */}
-            <div className="mb-6 md:mb-16">
+            <div className="mb-6 md:mb-12">
               {/* Top Brands - Horizontal scroll on mobile */}
-              <div className="mb-4">
+              <div className="mb-3">
                 <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase mb-2 block">
                   Top Brands
                 </span>
@@ -162,13 +183,19 @@ const Brands = () => {
               </div>
             </div>
             
-            {filteredWatches.length === 0 ? (
+            {loading ? (
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <WatchCardSkeleton key={i} />
+                ))}
+              </div>
+            ) : filteredWatches.length === 0 ? (
               <div className="text-center py-16 md:py-24">
                 <p className="text-muted-foreground text-base md:text-lg mb-2">
-                  No watches found for {activeBrand}
+                  {searchQuery ? `No watches found for "${searchQuery}"` : `No watches found for ${activeBrand}`}
                 </p>
                 <p className="text-xs md:text-sm text-muted-foreground">
-                  Try selecting a different brand or view all watches
+                  Try a different search term or brand
                 </p>
               </div>
             ) : (
