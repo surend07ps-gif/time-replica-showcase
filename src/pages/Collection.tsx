@@ -4,9 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WatchCard from "@/components/WatchCard";
+import WatchCardSkeleton from "@/components/WatchCardSkeleton";
 import WatchDetailModal from "@/components/WatchDetailModal";
 import BackToTopButton from "@/components/BackToTopButton";
 import PullToRefresh from "@/components/PullToRefresh";
+import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -49,6 +51,7 @@ const Collection = () => {
   const [user, setUser] = useState<User | null>(null);
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<string>("featured");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedWatch, setSelectedWatch] = useState<Watch | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [watches, setWatches] = useState<Watch[]>(staticWatches);
@@ -102,9 +105,17 @@ const Collection = () => {
     }
   };
 
-  const filteredWatches = activeFilter
-    ? watches.filter((watch) => watch.category === activeFilter)
-    : watches;
+  // Filter by search query and category
+  const filteredWatches = watches.filter((watch) => {
+    const matchesSearch = searchQuery === "" || 
+      watch.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      watch.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      watch.category.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesCategory = !activeFilter || watch.category === activeFilter;
+    
+    return matchesSearch && matchesCategory;
+  });
 
   const sortedWatches = [...filteredWatches].sort((a, b) => {
     if (sortBy === "price-low") return a.price - b.price;
@@ -116,16 +127,18 @@ const Collection = () => {
   const WatchGrid = () => (
     <>
       {loading ? (
-        <div className="text-center py-16 md:py-24">
-          <p className="text-muted-foreground text-sm md:text-base">Loading watches...</p>
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <WatchCardSkeleton key={i} />
+          ))}
         </div>
       ) : sortedWatches.length === 0 ? (
         <div className="text-center py-16 md:py-24">
           <p className="text-muted-foreground text-base md:text-lg mb-2">
-            No watches found in {activeFilter} category
+            {searchQuery ? `No watches found for "${searchQuery}"` : `No watches found in ${activeFilter} category`}
           </p>
           <p className="text-xs md:text-sm text-muted-foreground">
-            Try selecting a different category or view all watches
+            Try a different search term or category
           </p>
         </div>
       ) : (
@@ -153,15 +166,24 @@ const Collection = () => {
         <section className="py-6 md:py-16 bg-background">
           <div className="container mx-auto px-4 md:px-6">
             {/* Page Header - Mobile Optimized */}
-            <div className="mb-6 md:mb-12">
+            <div className="mb-4 md:mb-8">
               <h1 className="font-display text-3xl md:text-6xl mb-2 md:mb-4">Our Collection</h1>
               <p className="text-muted-foreground text-sm md:text-lg max-w-3xl">
                 Explore our complete range of luxury timepieces.
               </p>
             </div>
+
+            {/* Search Bar */}
+            <div className="mb-4 md:mb-6">
+              <SearchBar 
+                value={searchQuery} 
+                onChange={setSearchQuery}
+                placeholder="Search by name, brand, or category..."
+              />
+            </div>
             
             {/* Filters - Mobile Optimized */}
-            <div className="flex flex-col gap-4 mb-6 md:mb-12">
+            <div className="flex flex-col gap-3 md:gap-4 mb-6 md:mb-12">
               {/* Sort - Mobile First */}
               <div className="flex items-center justify-between md:hidden">
                 <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">Sort by</span>

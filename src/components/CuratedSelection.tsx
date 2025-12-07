@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import WatchCard from "./WatchCard";
+import WatchCardSkeleton from "./WatchCardSkeleton";
 import WatchDetailModal from "./WatchDetailModal";
 import { useWishlist } from "@/hooks/useWishlist";
 import watchDiver from "@/assets/watch-diver.jpg";
@@ -41,6 +42,7 @@ const CuratedSelection = () => {
   const [selectedWatch, setSelectedWatch] = useState<Watch | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [watches, setWatches] = useState<Watch[]>(staticWatches);
+  const [loading, setLoading] = useState(true);
   const { wishlist, toggleWishlist } = useWishlist(user);
 
   useEffect(() => {
@@ -57,6 +59,7 @@ const CuratedSelection = () => {
 
   useEffect(() => {
     const fetchWatches = async () => {
+      setLoading(true);
       const { data, error } = await supabase
         .from("watches")
         .select("*")
@@ -72,6 +75,7 @@ const CuratedSelection = () => {
           image: w.image_url || watchDiver,
         })));
       }
+      setLoading(false);
     };
     fetchWatches();
   }, []);
@@ -85,35 +89,45 @@ const CuratedSelection = () => {
   };
 
   return (
-    <section className="py-12 md:py-24 bg-background">
-      <div className="container mx-auto px-5 md:px-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-4">
+    <section className="py-10 md:py-24 bg-background">
+      <div className="container mx-auto px-4 md:px-6">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 md:mb-12 gap-3 md:gap-4">
           <div className="text-center md:text-left">
-            <h2 className="font-display text-3xl md:text-5xl mb-2 md:mb-4">Curated Selection</h2>
-            <p className="text-muted-foreground text-sm md:text-base">
+            <h2 className="font-display text-2xl md:text-5xl mb-1 md:mb-4">Curated Selection</h2>
+            <p className="text-muted-foreground text-xs md:text-base">
               Handpicked for their exceptional craftsmanship.
             </p>
           </div>
           <Link 
             to="/collection" 
-            className="text-primary hover:text-luxury-gold-hover transition-colors tracking-wide text-sm md:text-base text-center md:text-right"
+            className="text-primary hover:text-luxury-gold-hover transition-colors tracking-wide text-xs md:text-base text-center md:text-right"
           >
             View All →
           </Link>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-          {watches.map((watch) => (
-            <WatchCard 
-              key={watch.id} 
-              {...watch}
-              onQuickView={handleQuickView}
-              onToggleWishlist={toggleWishlist}
-              isInWishlist={wishlist.includes(watch.id)}
-              isAuthenticated={!!user}
-            />
-          ))}
-        </div>
+        {/* Watch Grid */}
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <WatchCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
+            {watches.slice(0, 6).map((watch) => (
+              <WatchCard 
+                key={watch.id} 
+                {...watch}
+                onQuickView={handleQuickView}
+                onToggleWishlist={toggleWishlist}
+                isInWishlist={wishlist.includes(watch.id)}
+                isAuthenticated={!!user}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <WatchDetailModal
