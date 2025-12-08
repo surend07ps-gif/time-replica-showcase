@@ -4,7 +4,7 @@ import heroImage from "@/assets/hero-mechanism.jpg";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center">
+    <section className="relative h-[calc(100vh-56px)] md:min-h-screen flex items-center justify-center md:justify-start">
       <div 
         className="absolute inset-0 z-0"
         style={{
@@ -17,7 +17,7 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-background via-background/95 to-background/60 md:via-background/80 md:to-transparent" />
       </div>
       
-      <div className="container relative z-10 mx-auto px-5 md:px-6 py-12 md:py-32 pt-20 md:pt-32">
+      <div className="container relative z-10 mx-auto px-5 md:px-6">
         <div className="max-w-3xl text-center md:text-left mx-auto md:mx-0">
           <p className="mb-2 md:mb-4 text-[10px] md:text-sm tracking-[0.25em] text-primary uppercase font-medium">
             Excellence in Motion
