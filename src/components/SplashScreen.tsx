@@ -34,7 +34,7 @@ const SplashScreen = ({ isVisible }: SplashScreenProps) => {
                 transition={{ delay: 0.3, duration: 0.4 }}
                 className="absolute inset-0 flex items-center justify-center"
               >
-                <span className="text-2xl font-display text-primary">LW</span>
+                <span className="text-2xl font-display text-primary">TTS</span>
               </motion.div>
             </motion.div>
 
@@ -43,9 +43,9 @@ const SplashScreen = ({ isVisible }: SplashScreenProps) => {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="text-2xl font-display tracking-[0.3em] text-foreground"
+              className="text-2xl font-display tracking-[0.2em] text-foreground"
             >
-              LUXURY WATCHES
+              The Time Store
             </motion.h1>
 
             {/* Loading Bar */}
