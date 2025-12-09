@@ -3,8 +3,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import SplashScreen from "./components/SplashScreen";
+import PageTransition from "./components/PageTransition";
+import MobileFAB from "./components/MobileFAB";
 import Index from "./pages/Index";
 import Collection from "./pages/Collection";
 import Brands from "./pages/Brands";
@@ -17,6 +20,28 @@ import UserManagement from "./pages/admin/UserManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/collection" element={<PageTransition><Collection /></PageTransition>} />
+        <Route path="/brands" element={<PageTransition><Brands /></PageTransition>} />
+        <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
+        <Route path="/wishlist" element={<PageTransition><Wishlist /></PageTransition>} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="watches" element={<Watches />} />
+          <Route path="users" element={<UserManagement />} />
+        </Route>
+        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -36,20 +61,8 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/collection" element={<Collection />} />
-            <Route path="/brands" element={<Brands />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="watches" element={<Watches />} />
-              <Route path="users" element={<UserManagement />} />
-            </Route>
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AnimatedRoutes />
+          <MobileFAB />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
